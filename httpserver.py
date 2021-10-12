@@ -81,6 +81,27 @@ def handle_request(request_socket):
     pass  # Replace this line with your code
 
 
+def next_byte(data_socket):
+    """
+    Read the next byte from the socket data_socket.
+
+    Read the next byte from the sender, received over the network.
+    If the byte has not yet arrived, this method blocks (waits)
+      until the byte arrives.
+    If the sender is done sending and is waiting for your response, this method blocks indefinitely.
+
+    :param data_socket: The socket to read from. The data_socket argument should be an open tcp
+                        data connection (either a client socket or a server data socket), not a tcp
+                        server's listening socket.
+    :return: the next byte, as a bytes object with a single byte in it
+    """
+    return data_socket.recv(1)
+
+
+def read_line(data_socket):
+
+    pass
+
 # ** Do not modify code below this line.  You should add additional helper methods above this line.
 
 # Utility functions
