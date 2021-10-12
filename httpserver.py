@@ -82,9 +82,21 @@ def handle_request(request_socket):
 
 
 def receive_request(request_socket):
-    b = read_line(request_socket)
-    print(b)
+    b = read_request_line(request_socket)
     pass
+
+
+def read_request_line(request_socket):
+    b = read_line(request_socket).replace(b'\r\n', b'').split(b'', -1)
+    print(b)
+    return b
+    pass
+
+
+def read_headers(request_socket):
+    b = b''
+    while not b == b'\r\n':
+        b = read_line(request_socket)
 
 
 def next_byte(data_socket):
@@ -112,6 +124,8 @@ def read_line(data_socket):
     return line
 
 
+# Eli's shit
+def headers():
 #Eli's shit
 def response():
     pass
@@ -142,6 +156,7 @@ def headers(file_name):
     header_map['connection'] = 0
     header_map['content_type'] = get_mime_type(file_name)
     header_map['content_length'] = get_file_size(file_name)
+
 
 # ** Do not modify code below this line.  You should add additional helper methods above this line.
 
