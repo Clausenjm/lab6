@@ -113,12 +113,35 @@ def read_line(data_socket):
 
 
 #Eli's shit
-def headers():
+def response():
+    pass
+
+
+def body():
+    pass
+
+
+def status_line(stat_code):
+    stat_line = b'HTTP/1.1 ' + stat_code
+    if stat_code == b'200':
+        stat_line += b' OK'
+
+    elif stat_code == b'400':
+        stat_line += b' BAD REQUEST'
+
+    elif stat_code == b'404':
+        stat_code += b' NOT FOUND'
+
+    stat_line += b'\r\n'
+    return stat_line
+
+
+def headers(file_name):
     header_map = dict()
     header_map['date'] = datetime
     header_map['connection'] = 0
-    header_map['content_type'] = get_mime_type('')
-    header_map['content_length'] = get_file_size('')
+    header_map['content_type'] = get_mime_type(file_name)
+    header_map['content_length'] = get_file_size(file_name)
 
 # ** Do not modify code below this line.  You should add additional helper methods above this line.
 
