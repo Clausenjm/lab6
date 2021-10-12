@@ -81,6 +81,14 @@ def handle_request(request_socket):
     pass  # Replace this line with your code
 
 
+def headers():
+    header_map = dict()
+    header_map['date'] = datetime
+    header_map['connection'] = 0
+    header_map['content_type'] = get_mime_type('')
+    header_map['content_length'] = get_file_size('')
+
+
 def next_byte(data_socket):
     """
     Read the next byte from the socket data_socket.
