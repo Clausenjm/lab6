@@ -99,8 +99,12 @@ def next_byte(data_socket):
 
 
 def read_line(data_socket):
+    line = b''
+    line_byte = next_byte(data_socket)
+    while not line.endswith(b'\r\n'):
+        line += line_byte
 
-    pass
+    return line
 
 # ** Do not modify code below this line.  You should add additional helper methods above this line.
 
