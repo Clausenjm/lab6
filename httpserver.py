@@ -77,8 +77,14 @@ def handle_request(request_socket):
     :param request_socket: socket representing TCP connection from the HTTP client_socket
     :return: None
     """
-    print(request_socket)
+    receive_request(request_socket)
     pass  # Replace this line with your code
+
+
+def receive_request(request_socket):
+    b = read_line(request_socket)
+    print(b)
+    pass
 
 
 def next_byte(data_socket):
@@ -100,9 +106,8 @@ def next_byte(data_socket):
 
 def read_line(data_socket):
     line = b''
-    line_byte = next_byte(data_socket)
     while not line.endswith(b'\r\n'):
-        line += line_byte
+        line += next_byte(data_socket)
 
     return line
 
