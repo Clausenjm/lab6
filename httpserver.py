@@ -119,6 +119,15 @@ def read_line(data_socket):
 
     return line
 
+
+#Eli's shit
+def headers():
+    header_map = dict()
+    header_map['date'] = datetime
+    header_map['connection'] = 0
+    header_map['content_type'] = get_mime_type('')
+    header_map['content_length'] = get_file_size('')
+
 # ** Do not modify code below this line.  You should add additional helper methods above this line.
 
 # Utility functions
