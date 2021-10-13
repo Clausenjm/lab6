@@ -125,13 +125,15 @@ def read_line(data_socket):
 
 
 # Eli's shit
-def headers():
-#Eli's shit
-def response():
-    pass
+
+def respond(stat_code, file_name):
+    response = status_line(stat_code)
+    response += generate_headers(file_name)
+    response += body(file_name)
+    return response
 
 
-def body():
+def body(file_name):
     pass
 
 
@@ -150,7 +152,7 @@ def status_line(stat_code):
     return stat_line
 
 
-def headers(file_name):
+def generate_headers(file_name):
     header_map = dict()
     header_map['date'] = datetime
     header_map['connection'] = 0
