@@ -77,7 +77,8 @@ def handle_request(request_socket):
     :param request_socket: socket representing TCP connection from the HTTP client_socket
     :return: None
     """
-    receive_request(request_socket)
+    status_code, url = receive_request(request_socket)
+    respond(status_code, url)
     pass  # Replace this line with your code
 
 
@@ -88,6 +89,7 @@ def receive_request(request_socket):
     """
     read_request_line(request_socket)
     read_headers(request_socket)
+    return 200, b'/'
 
 
 def read_request_line(request_socket):
