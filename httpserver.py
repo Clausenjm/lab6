@@ -86,7 +86,6 @@ def receive_request(request_socket):
     read_headers(request_socket)
 
 
-
 def read_request_line(request_socket):
     """
     This method reads the request line i.e. GET / HTTP/1.1 and saves all the components to
@@ -96,7 +95,6 @@ def read_request_line(request_socket):
     print(b)
     t = read_headers(request_socket)
     return b
-
 
 
 def read_headers(request_socket):
