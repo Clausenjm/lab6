@@ -82,21 +82,64 @@ def handle_request(request_socket):
 
 
 def receive_request(request_socket):
-    b = read_request_line(request_socket)
-    pass
+    read_request_line(request_socket)
+    read_headers(request_socket)
+
 
 
 def read_request_line(request_socket):
-    b = read_line(request_socket).replace(b'\r\n', b'').split(b'', -1)
+    """
+    This method reads the request line i.e. GET / HTTP/1.1 and saves all the components to
+    a byte[] array split by the spaces so the array should hold [GET] [/URL] and [HTTP/1.1]
+    """
+    b = read_line(request_socket).replace(b'\r\n', b'').split(b' ', -1)
     print(b)
+    t = read_headers(request_socket)
     return b
-    pass
+
 
 
 def read_headers(request_socket):
+    """
+    this method goes through all the headers and reads them one by one
+    and saves them to a map with the keys being there name
+    """
+    header_dict = {}
     b = b''
-    while not b == b'\r\n':
-        b = read_line(request_socket)
+    end_of_headers = False
+    while not end_of_headers:
+        header, end_of_headers = read_header(request_socket)
+        if not end_of_headers:
+            header_dict[read_header_name(header)] = read_header_value(header)
+        b += header
+    print(header_dict)
+    return b
+
+
+def read_header(request_socket):
+    """
+    This method reads single headers and can
+    """
+    b = b''
+    is_end_of_headers = False
+    b += read_line(request_socket)
+    if b == b'\r\n':
+        is_end_of_headers = True
+    return b, is_end_of_headers
+
+
+def read_header_value(byte_object):
+    """
+    if you need to remove \r\n from the data do it here
+    """
+    return byte_object[0:byte_object.index(b':')+1]
+
+
+def read_header_name(byte_object):
+    """
+    if you need to remove or add to the name do it here
+    """
+    return byte_object[byte_object.index(b':')+2:byte_object.index(b'\r\n')+2]
 
 
 def next_byte(data_socket):
@@ -126,7 +169,10 @@ def read_line(data_socket):
 
 # Eli's shit
 def headers():
-#Eli's shit
+    pass
+
+
+# Eli's shit
 def response():
     pass
 
