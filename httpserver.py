@@ -82,6 +82,10 @@ def handle_request(request_socket):
 
 
 def receive_request(request_socket):
+    """
+    this method receives request from a client and parses thorough the data
+    it will try to verify the data
+    """
     read_request_line(request_socket)
     read_headers(request_socket)
 
@@ -139,6 +143,8 @@ def read_header_name(byte_object):
     """
     return byte_object[byte_object.index(b':')+2:byte_object.index(b'\r\n')+2]
 
+def verify_request(line):
+    pass
 
 def next_byte(data_socket):
     """
