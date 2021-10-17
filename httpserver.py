@@ -89,7 +89,7 @@ def receive_request(request_socket):
     """
     status_code, url = read_request_line(request_socket)
     read_headers(request_socket)
-    return b'200', b'/'
+    return status_code, url
 
 
 def read_request_line(request_socket):
