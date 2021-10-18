@@ -169,6 +169,7 @@ def read_header_name(byte_object):
     return byte_object[byte_object.index(b':') + 2:byte_object.index(b'\r\n') + 2]
 
 
+
 def verify_request(line):
     pass
 
@@ -208,8 +209,19 @@ def respond(stat_code, url):
     return response
 
 
-def body(file_name):
-    pass
+def body(url):
+    file_name = url.replace(0)
+
+    if file_name == '':
+        file_name = 'index.html'
+
+    file = open(file_name, 'rb')
+    file_byte = file.read(1)
+    html = b''
+    while file_byte:
+        html += file_byte
+        file_byte = file.read(1)
+    return html
 
 
 def status_line(stat_code):
@@ -229,10 +241,18 @@ def status_line(stat_code):
 
 def generate_headers(file_name):
     header_map = dict()
-    header_map['date'] = datetime
-    header_map['connection'] = 0
-    header_map['content_type'] = get_mime_type(file_name)
-    header_map['content_length'] = get_file_size(file_name)
+    date = datetime.datetime.utcnow()
+    header_map['Date'] = str(date).encode() + b'\r\n'
+    header_map['Connection'] = b'close' + b'\r\n'
+    header_map['Content_Type'] = get_mime_type(file_name).to_bytes(get_mime_type(file_name), 'big') + b'\r\n'
+    header_map['Content_Length'] = get_file_size(file_name).to_bytes(get_file_size(file_name), 'big') + b'\r\n'
+
+    headers = header_map.get('Date')
+    headers += header_map.get('Connection')
+    headers += header_map.get('Content_Type')
+    headers += header_map.get('Content_Length')
+
+    return headers
 
 
 # ** Do not modify code below this line.  You should add additional helper methods above this line.
