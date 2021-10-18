@@ -206,17 +206,14 @@ def read_line(data_socket):
 
 def respond(stat_code, url):
     response = status_line(stat_code)
+    url = check_default_file(url)
     response += generate_headers(url)
     response += body(url)
     return response
 
 
 def body(url):
-    file_name = url.replace(0)
-
-    if file_name == '':
-        file_name = 'index.html'
-
+    file_name = url.replace(b'/', b'')
     file = open(file_name, 'rb')
     file_byte = file.read(1)
     html = b''
@@ -224,6 +221,12 @@ def body(url):
         html += file_byte
         file_byte = file.read(1)
     return html
+
+
+def check_default_file(url):
+    if url == b'/':
+        url = b'/index.html'
+    return url
 
 
 def status_line(stat_code):
@@ -243,17 +246,18 @@ def status_line(stat_code):
 
 def generate_headers(file_name):
     header_map = dict()
+    file_path = '.' + file_name.decode()
     date = datetime.datetime.utcnow()
     header_map['Date'] = str(date).encode() + b'\r\n'
     header_map['Connection'] = b'close' + b'\r\n'
-    header_map['Content_Type'] = get_mime_type(file_name).to_bytes(get_mime_type(file_name), 'big') + b'\r\n'
-    header_map['Content_Length'] = get_file_size(file_name).to_bytes(get_file_size(file_name), 'big') + b'\r\n'
+    header_map['Content_Type'] = get_mime_type(file_path).encode() + b'\r\n'
+    header_map['Content_Length'] = get_file_size(file_path).to_bytes(get_file_size(file_path), 'big') + b'\r\n'
 
     headers = header_map.get('Date')
     headers += header_map.get('Connection')
     headers += header_map.get('Content_Type')
     headers += header_map.get('Content_Length')
-    headers += '\r\n'
+    headers += b'\r\n'
 
     return headers
 
@@ -271,7 +275,7 @@ def get_mime_type(file_path):
     :param file_path: string containing path to (resource) file, such as './abc.html'
     :return: If successful in guessing the MIME type, a string representing the content type, such as 'text/html'
              Otherwise, None
-    :rtype: int or None
+    :rtype: str or None
     """
 
     mime_type_and_encoding = mimetypes.guess_type(file_path)
