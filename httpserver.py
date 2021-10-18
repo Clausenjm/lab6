@@ -91,7 +91,6 @@ def receive_request(request_socket):
     :param request_socket:
     """
     status_code, url = read_request_line(request_socket)
-    read_headers(request_socket)
     return status_code, url
 
 
@@ -102,8 +101,7 @@ def read_request_line(request_socket):
     a byte[] array split by the spaces so the array should hold [GET] [/URL] and [HTTP/1.1]
     :param request_socket:
     """
-    b = read_line(request_socket)
-    #.replace(b'\r\n', b'').split(b' ', -1)
+    b = read_line(request_socket).replace(b'\r\n', b'').split(b' ', -1)
     print(b)
     is_it_a_good_status_line = b'200'
     url = b'/'
