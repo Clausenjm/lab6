@@ -77,8 +77,8 @@ def handle_request(request_socket):
     :return: None
     """
     status_code, url = receive_request(request_socket)
-    respond(status_code, url)
-    request_socket.sendall()
+    response = respond(status_code, url)
+    request_socket.sendall(response)
     request_socket.close()
     pass  # Replace this line with your code
 
