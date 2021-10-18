@@ -125,7 +125,7 @@ def read_headers(request_socket):
     and saves them to a map with the keys being there name
     :param request_socket:
     """
-    header_dict = {}
+    header_dict = dict()
     b = b''
     end_of_headers = False
     while not end_of_headers:
@@ -157,7 +157,8 @@ def read_header_value(byte_object):
     if you need to remove \r\n from the data do it here
     :param byte_object:
     """
-    return byte_object[0:byte_object.index(b':') + 1]
+    holder = byte_object.split(b":", 1)
+    return holder[1]
 
 
 def read_header_name(byte_object):
@@ -166,7 +167,9 @@ def read_header_name(byte_object):
     if you need to remove or add to the name do it here
     :param byte_object:
     """
-    return byte_object[byte_object.index(b':') + 2:byte_object.index(b'\r\n') + 2]
+    holder = byte_object.split(b":", 1)
+    return holder[0]
+
 
 
 
