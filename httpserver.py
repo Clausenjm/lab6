@@ -78,13 +78,17 @@ def handle_request(request_socket):
     """
     status_code, url = receive_request(request_socket)
     respond(status_code, url)
+    request_socket.sendall()
+    request_socket.close()
     pass  # Replace this line with your code
 
 
 def receive_request(request_socket):
     """
+    -author: Josiah Clausen
     this method receives request from a client and parses thorough the data
     it will try to verify the data
+    :param request_socket:
     """
     status_code, url = read_request_line(request_socket)
     read_headers(request_socket)
@@ -93,21 +97,33 @@ def receive_request(request_socket):
 
 def read_request_line(request_socket):
     """
+    -author: Josiah Clausen
     This method reads the request line i.e. GET / HTTP/1.1 and saves all the components to
     a byte[] array split by the spaces so the array should hold [GET] [/URL] and [HTTP/1.1]
+    :param request_socket:
     """
     b = read_line(request_socket).replace(b'\r\n', b'').split(b' ', -1)
     print(b)
-    url = b.index(1)
-
-    t = read_headers(request_socket)
-    return b'200', url
+    is_it_a_good_status_line = b'200'
+    url = b'/'
+    if b[0] == b'GET':
+        find_the_url = b[1]
+        if find_the_url != b'/' and find_the_url != b'/index.html' and find_the_url != b'/msoe.png' and find_the_url != b'/styles.css':
+            is_it_a_good_status_line = b'404'
+        else:
+            url = b[1]
+            read_headers(request_socket)
+    else:
+        is_it_a_good_status_line = b'400'
+    return is_it_a_good_status_line, url
 
 
 def read_headers(request_socket):
     """
+    -author: Josiah Clausen
     this method goes through all the headers and reads them one by one
     and saves them to a map with the keys being there name
+    :param request_socket:
     """
     header_dict = {}
     b = b''
@@ -123,7 +139,9 @@ def read_headers(request_socket):
 
 def read_header(request_socket):
     """
+    -author: Josiah Clausen
     This method reads single headers and can
+    :param request_socket:
     """
     b = b''
     is_end_of_headers = False
@@ -135,22 +153,29 @@ def read_header(request_socket):
 
 def read_header_value(byte_object):
     """
+    -author: Josiah Clausen
     if you need to remove \r\n from the data do it here
+    :param byte_object:
     """
-    return byte_object[0:byte_object.index(b':')+1]
+    return byte_object[0:byte_object.index(b':') + 1]
 
 
 def read_header_name(byte_object):
     """
+    -author: Josiah Clausen
     if you need to remove or add to the name do it here
+    :param byte_object:
     """
-    return byte_object[byte_object.index(b':')+2:byte_object.index(b'\r\n')+2]
+    return byte_object[byte_object.index(b':') + 2:byte_object.index(b'\r\n') + 2]
+
 
 def verify_request(line):
     pass
 
+
 def next_byte(data_socket):
     """
+    -author: Josiah Clausen
     Read the next byte from the socket data_socket.
 
     Read the next byte from the sender, received over the network.
