@@ -251,6 +251,7 @@ def generate_headers(file_name):
     headers += header_map.get('Connection')
     headers += header_map.get('Content_Type')
     headers += header_map.get('Content_Length')
+    headers += '\r\n'
 
     return headers
 
