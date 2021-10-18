@@ -76,7 +76,8 @@ def handle_request(request_socket):
     :param request_socket: socket representing TCP connection from the HTTP client_socket
     :return: None
     """
-    receive_request(request_socket)
+    status_code, url = receive_request(request_socket)
+    respond(status_code, url)
     pass  # Replace this line with your code
 
 
@@ -85,8 +86,9 @@ def receive_request(request_socket):
     this method receives request from a client and parses thorough the data
     it will try to verify the data
     """
-    read_request_line(request_socket)
+    status_code, url = read_request_line(request_socket)
     read_headers(request_socket)
+    return status_code, url
 
 
 def read_request_line(request_socket):
@@ -96,8 +98,10 @@ def read_request_line(request_socket):
     """
     b = read_line(request_socket).replace(b'\r\n', b'').split(b' ', -1)
     print(b)
+    url = b.index(1)
+
     t = read_headers(request_socket)
-    return b
+    return b'200', url
 
 
 def read_headers(request_socket):
