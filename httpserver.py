@@ -23,7 +23,6 @@ Summary: (Summarize your experience with the lab, what you learned, what you lik
 """
 
 import socket
-import re
 import threading
 import os
 import mimetypes
@@ -173,10 +172,10 @@ def read_line(data_socket):
 
 # Eli's shit
 
-def respond(stat_code, file_name):
+def respond(stat_code, url):
     response = status_line(stat_code)
-    response += generate_headers(file_name)
-    response += body(file_name)
+    response += generate_headers(url)
+    response += body(url)
     return response
 
 
