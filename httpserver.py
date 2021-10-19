@@ -152,7 +152,7 @@ def read_header_value(byte_object):
     """
     -author: Josiah Clausen
     if you need to remove \r\n from the data do it here
-    :param byte_object:
+    :param byte_object: this object is the bytes object of a header
     """
     holder = byte_object.split(b":", 1)
     return holder[1]
@@ -162,7 +162,7 @@ def read_header_name(byte_object):
     """
     -author: Josiah Clausen
     if you need to remove or add to the name do it here
-    :param byte_object:
+    :param byte_object: this object is the bytes object of a header
     """
     holder = byte_object.split(b":", 1)
     return holder[0]
