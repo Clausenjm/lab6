@@ -79,7 +79,7 @@ def handle_request(request_socket):
     status_code, url = receive_request(request_socket)
     response = respond(status_code, url)
     request_socket.sendall(response)
-    request_socket.close()
+    #request_socket.close() # We talked to you about this!!!!
 
 
 def receive_request(request_socket):
@@ -108,12 +108,13 @@ def read_request_line(request_socket):
         if find_the_url != b'/' and find_the_url != b'/index.html' \
                 and find_the_url != b'/msoe.png' and find_the_url != b'/styles.css':
             stat_line = b'404'
-            url = b'/404.html'
+            url = b'/'
         else:
             url = b[1]
             read_headers(request_socket)
     else:
         stat_line = b'400'
+        url = b'/'
     return stat_line, url
 
 
@@ -210,10 +211,16 @@ def respond(stat_code, url):
     :param url: The url extension received from the tcp connection.
     :return: the full byte literal response
     """
+
     response = status_line(stat_code)
     url = check_default_file(url)
     response += generate_headers(url)
-    response += body(url)
+    if stat_code == b'404':
+        response += b'<!DOCTYPE html><html lang="en"><head><body><meta charset="UTF-8"><h1>404 Not Found</h1></body></head></html>'
+    elif stat_code == b'400':
+        response += b'<!DOCTYPE html><html lang="en"><head><body><meta charset="UTF-8"><h1>400 bad request</h1></body></head></html>'
+    else:
+        response += body(url)
     return response
 
 
@@ -276,11 +283,14 @@ def generate_headers(file_name):
     """
     header_map = dict()
     file_path = '.' + file_name.decode()
-    date = datetime.datetime.utcnow()
-    header_map['Date: '] = str(date).encode()
+    #date = datetime.datetime.utcnow()
+    timestamp = datetime.datetime.utcnow()
+    timestring = timestamp.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    # Sun, 06 Nov 1994 08:49:37 GMT
+    header_map['Date: '] = timestring.encode()
     header_map['Connection: '] = b'close'
-    header_map['Content_Type: '] = get_mime_type(file_path).encode()
-    header_map['Content_Length: '] = get_file_size(file_path).to_bytes(4, 'big')
+    header_map['Content-Type: '] = (get_mime_type(file_path).encode())
+    header_map['Content-Length: '] = (str(get_file_size(file_path)).encode("ASCII"))
 
     return assemble_headers(header_map)
 
