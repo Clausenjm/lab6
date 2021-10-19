@@ -4,18 +4,22 @@
 - Fall 202N
 - Lab N
 - Names:
-  - 
-  - 
+  - Josiah Clausen
+  - Elise Hamp
 
 An HTTP server
 
 Introduction: (Describe the lab in your own words)
-
-
-
+The purpose of this lab is to expose us to getting requests from a client
+which we then have to respond with the appropriate information. Like content length
+what the connection type is and what data we are sending. Along with that we must
+also handle incorrect GET request as well as request that have no path on the
+server
 
 Summary: (Summarize your experience with the lab, what you learned, what you liked,what you disliked, and any suggestions you have for improvement)
-
+We really enjoyed the ability to get a request from a client and transport information over
+a network. That is really cool and gives you a real ground work for how the internet actual
+transports data across networks. no major changes are needed to the lab
 
 
 
