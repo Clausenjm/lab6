@@ -107,6 +107,7 @@ def read_request_line(request_socket):
         find_the_url = b[1]
         if find_the_url != b'/' and find_the_url != b'/index.html' and find_the_url != b'/msoe.png' and find_the_url != b'/styles.css':
             is_it_a_good_status_line = b'404'
+            url = b'/404.html'
         else:
             url = b[1]
             read_headers(request_socket)
@@ -239,10 +240,10 @@ def generate_headers(file_name):
     header_map = dict()
     file_path = '.' + file_name.decode()
     date = datetime.datetime.utcnow()
-    header_map['Date: '] = str(date).encode() + b'\r\n'
-    header_map['Connection: '] = b'close' + b'\r\n'
-    header_map['Content_Type: '] = get_mime_type(file_path).encode() + b'\r\n'
-    header_map['Content_Length: '] = get_file_size(file_path).to_bytes(8, 'big') + b'\r\n'
+    header_map['Date: '] = str(date).encode()
+    header_map['Connection: '] = b'close'
+    header_map['Content_Type: '] = get_mime_type(file_path).encode()
+    header_map['Content_Length: '] = get_file_size(file_path).to_bytes(8, 'big')
 
     return assemble_headers(header_map)
 
@@ -253,6 +254,7 @@ def assemble_headers(header_map):
     for key in keys:
         headers += key.encode()
         headers += header_map[key]
+        headers += b'\r\n'
     headers += b'\r\n'
     return headers
 
