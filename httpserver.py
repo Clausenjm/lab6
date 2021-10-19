@@ -229,7 +229,7 @@ def status_line(stat_code):
         stat_line += b' BAD REQUEST'
 
     elif stat_code == b'404':
-        stat_code += b' NOT FOUND'
+        stat_line += b' NOT FOUND'
 
     stat_line += b'\r\n'
     return stat_line
