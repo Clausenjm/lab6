@@ -87,7 +87,7 @@ def receive_request(request_socket):
     -author: Josiah Clausen
     this method receives request from a client and parses thorough the data
     it will try to verify the data
-    :param request_socket:
+    :param request_socket: The open tcp socket that the request is being made from.
     """
     status_code, url = read_request_line(request_socket)
     return status_code, url
@@ -98,22 +98,23 @@ def read_request_line(request_socket):
     -author: Josiah Clausen
     This method reads the request line i.e. GET / HTTP/1.1 and saves all the components to
     a byte[] array split by the spaces so the array should hold [GET] [/URL] and [HTTP/1.1]
-    :param request_socket:
+    :param request_socket: The open tcp socket that the request is being made from.
     """
     b = read_line(request_socket).replace(b'\r\n', b'').split(b' ', -1)
-    is_it_a_good_status_line = b'200'
+    stat_line = b'200'
     url = b'/'
     if b[0] == b'GET':
         find_the_url = b[1]
-        if find_the_url != b'/' and find_the_url != b'/index.html' and find_the_url != b'/msoe.png' and find_the_url != b'/styles.css':
-            is_it_a_good_status_line = b'404'
+        if find_the_url != b'/' and find_the_url != b'/index.html' \
+                and find_the_url != b'/msoe.png' and find_the_url != b'/styles.css':
+            stat_line = b'404'
             url = b'/404.html'
         else:
             url = b[1]
             read_headers(request_socket)
     else:
-        is_it_a_good_status_line = b'400'
-    return is_it_a_good_status_line, url
+        stat_line = b'400'
+    return stat_line, url
 
 
 def read_headers(request_socket):
@@ -121,7 +122,7 @@ def read_headers(request_socket):
     -author: Josiah Clausen
     this method goes through all the headers and reads them one by one
     and saves them to a map with the keys being there name
-    :param request_socket:
+    :param request_socket: The open tcp socket that the request is being made from.
     """
     header_dict = dict()
     b = b''
@@ -138,7 +139,7 @@ def read_header(request_socket):
     """
     -author: Josiah Clausen
     This method reads single headers and can
-    :param request_socket:
+    :param request_socket: The open tcp socket that the request is being made from.
     """
     b = b''
     is_end_of_headers = False
@@ -152,7 +153,7 @@ def read_header_value(byte_object):
     """
     -author: Josiah Clausen
     if you need to remove \r\n from the data do it here
-    :param byte_object:
+    :param byte_object: byte literal to be checked for CRLF removal
     """
     holder = byte_object.split(b":", 1)
     return holder[1]
@@ -162,7 +163,7 @@ def read_header_name(byte_object):
     """
     -author: Josiah Clausen
     if you need to remove or add to the name do it here
-    :param byte_object:
+    :param byte_object: byte literal to be added to or removed from
     """
     holder = byte_object.split(b":", 1)
     return holder[0]
@@ -187,6 +188,13 @@ def next_byte(data_socket):
 
 
 def read_line(data_socket):
+    """
+    :author: Elisha Hamp
+    Takes in the data socket and uses it to read a line of bytes, ending when the
+    bytes end in CRLF.
+    :param data_socket: The open tcp connection with the client to read from.
+    :return: The full line of bytes received from the data socket.
+    """
     line = b''
     while not line.endswith(b'\r\n'):
         line += next_byte(data_socket)
@@ -194,9 +202,14 @@ def read_line(data_socket):
     return line
 
 
-# Eli's shit
-
 def respond(stat_code, url):
+    """
+    :author: Elisha Hamp
+    Puts together the response with the status line, headers, and body.
+    :param stat_code: The status code to be added to the response status line
+    :param url: The url extension received from the tcp connection.
+    :return: the full byte literal response
+    """
     response = status_line(stat_code)
     url = check_default_file(url)
     response += generate_headers(url)
@@ -205,50 +218,80 @@ def respond(stat_code, url):
 
 
 def body(url):
+    """
+    :author: Elisha Hamp
+    Opens the desired file and reads the bytes in it.
+    :param url: The url extension received from the tcp connection.
+    :return: the body put together from reading the file.
+    """
     file_name = url.replace(b'/', b'')
     file = open(file_name, 'rb')
     file_byte = file.read(1)
-    html = b''
+    file_body = b''
     while file_byte:
-        html += file_byte
+        file_body += file_byte
         file_byte = file.read(1)
-    return html
+    return file_body
 
 
 def check_default_file(url):
+    """
+    :author: Elisha Hamp
+    Checks the url byte literal to see if the program should return the default index.html file
+    :param url: The url extension received from the tcp connection.
+    :return: returns the adjusted
+        """
     if url == b'/':
         url = b'/index.html'
     return url
 
 
 def status_line(stat_code):
+    """
+    :author: Elisha Hamp
+    Reads the status code and uses it to assemble the status line.
+    :param stat_code: The status code to be added to the status line.
+    :return: the full status line
+    """
     stat_line = b'HTTP/1.1 ' + stat_code
     if stat_code == b'200':
         stat_line += b' OK'
 
     elif stat_code == b'400':
-        stat_line += b' BAD REQUEST'
+        stat_line += b' Bad Request'
 
     elif stat_code == b'404':
-        stat_line += b' NOT FOUND'
+        stat_line += b' Not Found'
 
     stat_line += b'\r\n'
     return stat_line
 
 
 def generate_headers(file_name):
+    """
+    :author: Elisha Hamp
+    Gets a path using the file name and uses it to generate all of the necessary headers.
+    :param file_name: name of the file to be used to generate the headers.
+    :return: the headers as a byte literal.
+    """
     header_map = dict()
     file_path = '.' + file_name.decode()
     date = datetime.datetime.utcnow()
     header_map['Date: '] = str(date).encode()
     header_map['Connection: '] = b'close'
     header_map['Content_Type: '] = get_mime_type(file_path).encode()
-    header_map['Content_Length: '] = get_file_size(file_path).to_bytes(8, 'big')
+    header_map['Content_Length: '] = get_file_size(file_path).to_bytes(4, 'big')
 
     return assemble_headers(header_map)
 
 
 def assemble_headers(header_map):
+    """
+    :author: Elisha Hamp
+    Turns the header map into a byte literal.
+    :param header_map: Python dictionary containing all of the headers
+    :return: headers in byte literal form
+    """
     keys = header_map.keys()
     headers = b''
     for key in keys:
