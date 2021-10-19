@@ -8,11 +8,12 @@
 
 An HTTP server
 
-Introduction:
-    This lab is designed to familiarize students with how an http server works. The students must
-create a server with a non-persistent connection which can be accessed via localhost and responds with
-the proper file for the url requested from the client.
-
+Introduction: (Describe the lab in your own words)
+The purpose of this lab is to expose us to getting requests from a client
+which we then have to respond with the appropriate information. Like content length
+what the connection type is and what data we are sending. Along with that we must
+also handle incorrect GET request as well as request that have no path on the
+server
 
 Summary: (Summarize your experience with the lab, what you learned, what you liked,what you disliked, and any suggestions you have for improvement)
     This lab was in some ways tougher than the client lab. Handling 404 errors has been incredibly difficult for us.
