@@ -299,6 +299,7 @@ def assemble_headers(header_map):
         headers += header_map[key]
         headers += b'\r\n'
     headers += b'\r\n'
+    print(headers)
     return headers
 
 
