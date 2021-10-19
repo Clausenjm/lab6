@@ -1,11 +1,10 @@
 """
-- NOTE: REPLACE 'N' Below with your section, year, and lab number
-- CS2911 - 0NN
-- Fall 202N
-- Lab N
+- CS2911 - 051
+- Fall 2021
+- Lab 06
 - Names:
   - Josiah Clausen
-  - Elise Hamp
+  - Elisha Hamp
 
 An HTTP server
 
@@ -17,12 +16,9 @@ also handle incorrect GET request as well as request that have no path on the
 server
 
 Summary: (Summarize your experience with the lab, what you learned, what you liked,what you disliked, and any suggestions you have for improvement)
-We really enjoyed the ability to get a request from a client and transport information over
-a network. That is really cool and gives you a real ground work for how the internet actual
-transports data across networks. no major changes are needed to the lab
-
-
-
+    This lab was in some ways tougher than the client lab. Handling 404 errors has been incredibly difficult for us.
+The basic response however has worked rather well and allowed us to feel accomplished once we got that far, as it was
+very fascinating to see our code respond to different url requests. There are no changes we could suggest.
 
 """
 
