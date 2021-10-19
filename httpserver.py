@@ -1,24 +1,23 @@
 """
-- NOTE: REPLACE 'N' Below with your section, year, and lab number
-- CS2911 - 0NN
-- Fall 202N
-- Lab N
+- CS2911 - 051
+- Fall 2021
+- Lab 06
 - Names:
-  - 
-  - 
+  - Josiah Clausen
+  - Elisha Hamp
 
 An HTTP server
 
-Introduction: (Describe the lab in your own words)
-
-
+Introduction:
+    This lab is designed to familiarize students with how an http server works. The students must
+create a server with a non-persistent connection which can be accessed via localhost and responds with
+the proper file for the url requested from the client.
 
 
 Summary: (Summarize your experience with the lab, what you learned, what you liked,what you disliked, and any suggestions you have for improvement)
-
-
-
-
+    This lab was in some ways tougher than the client lab. Handling 404 errors has been incredibly difficult for us.
+The basic response however has worked rather well and allowed us to feel accomplished once we got that far, as it was
+very fascinating to see our code respond to different url requests. There are no changes we could suggest.
 
 """
 
