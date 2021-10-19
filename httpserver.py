@@ -80,7 +80,6 @@ def handle_request(request_socket):
     response = respond(status_code, url)
     request_socket.sendall(response)
     request_socket.close()
-    pass  # Replace this line with your code
 
 
 def receive_request(request_socket):
@@ -102,7 +101,6 @@ def read_request_line(request_socket):
     :param request_socket:
     """
     b = read_line(request_socket).replace(b'\r\n', b'').split(b' ', -1)
-    print(b)
     is_it_a_good_status_line = b'200'
     url = b'/'
     if b[0] == b'GET':
@@ -132,7 +130,6 @@ def read_headers(request_socket):
         if not end_of_headers:
             header_dict[read_header_name(header)] = read_header_value(header)
         b += header
-    print(header_dict)
     return b
 
 
@@ -168,12 +165,6 @@ def read_header_name(byte_object):
     """
     holder = byte_object.split(b":", 1)
     return holder[0]
-
-
-
-
-def verify_request(line):
-    pass
 
 
 def next_byte(data_socket):
@@ -248,17 +239,21 @@ def generate_headers(file_name):
     header_map = dict()
     file_path = '.' + file_name.decode()
     date = datetime.datetime.utcnow()
-    header_map['Date'] = str(date).encode() + b'\r\n'
-    header_map['Connection'] = b'close' + b'\r\n'
-    header_map['Content_Type'] = get_mime_type(file_path).encode() + b'\r\n'
-    header_map['Content_Length'] = get_file_size(file_path).to_bytes(get_file_size(file_path), 'big') + b'\r\n'
+    header_map['Date: '] = str(date).encode() + b'\r\n'
+    header_map['Connection: '] = b'close' + b'\r\n'
+    header_map['Content_Type: '] = get_mime_type(file_path).encode() + b'\r\n'
+    header_map['Content_Length: '] = get_file_size(file_path).to_bytes(8, 'big') + b'\r\n'
 
-    headers = header_map.get('Date')
-    headers += header_map.get('Connection')
-    headers += header_map.get('Content_Type')
-    headers += header_map.get('Content_Length')
+    return assemble_headers(header_map)
+
+
+def assemble_headers(header_map):
+    keys = header_map.keys()
+    headers = b''
+    for key in keys:
+        headers += key.encode()
+        headers += header_map[key]
     headers += b'\r\n'
-
     return headers
 
 
